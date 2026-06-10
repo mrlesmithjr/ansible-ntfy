@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: mrlesmithjr
+  description: Deploy ntfy self-hosted push notification server via Docker Compose
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+  galaxy_tags:
+    - ntfy
+    - notifications
+    - docker
+
+dependencies: []

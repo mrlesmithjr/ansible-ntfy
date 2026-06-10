@@ -1,0 +1,67 @@
+---
+- name: Create ntfy data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  become: true
+  loop:
+    - "{{ ntfy_data_root }}"
+    - "{{ ntfy_data_root }}/cache"
+    - "{{ ntfy_data_root }}/cache/attachments"
+    - "{{ ntfy_data_root }}/lib"
+  tags: [ntfy]
+
+- name: Deploy ntfy config
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ ntfy_data_root }}/config.yml"
+    owner: root
+    group: root
+    mode: "0640"
+  become: true
+  notify: Restart ntfy
+  tags: [ntfy]
+
+- name: Deploy ntfy docker-compose.yml
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ ntfy_data_root }}/docker-compose.yml"
+    owner: root
+    group: root
+    mode: "0640"
+  become: true
+  notify: Restart ntfy
+  tags: [ntfy]
+
+- name: Ensure extra Docker networks exist
+  community.docker.docker_network:
+    name: "{{ item }}"
+    driver: bridge
+    state: present
+  become: true
+  loop: "{{ ntfy_extra_networks }}"
+  when: ntfy_enable_extra_networks | bool
+  tags: [ntfy]
+
+- name: Launch ntfy with Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ ntfy_data_root }}"
+    state: present
+  become: true
+  tags: [ntfy]
+
+- name: Wait for ntfy to be ready
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ ntfy_host_port }}/v1/health"
+    method: GET
+    status_code:
+      - 200
+  register: ntfy_health_check
+  until: ntfy_health_check.status == 200
+  retries: 24
+  delay: 5
+  changed_when: false
+  tags: [ntfy]

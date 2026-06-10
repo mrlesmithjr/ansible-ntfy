@@ -1,0 +1,30 @@
+services:
+  ntfy:
+    image: "{{ ntfy_image }}"
+    container_name: ntfy
+    restart: unless-stopped
+    command:
+      - serve
+    volumes:
+      - ./config.yml:/etc/ntfy/server.yml:ro
+      - ./cache:/var/cache/ntfy
+      - ./lib:/var/lib/ntfy
+    ports:
+      - "{{ ntfy_host_bind }}:{{ ntfy_host_port }}:{{ ntfy_internal_port }}"
+    networks:
+      - ntfy_net
+{% if ntfy_enable_extra_networks | bool %}
+{% for net in ntfy_extra_networks %}
+      - "{{ net }}"
+{% endfor %}
+{% endif %}
+
+networks:
+  ntfy_net:
+    driver: bridge
+{% if ntfy_enable_extra_networks | bool %}
+{% for net in ntfy_extra_networks %}
+  "{{ net }}":
+    external: true
+{% endfor %}
+{% endif %}

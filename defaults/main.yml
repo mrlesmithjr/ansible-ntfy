@@ -1,0 +1,30 @@
+---
+# defaults file for ansible-ntfy
+
+ntfy_data_root: /opt/ntfy
+ntfy_image: "binwiederhier/ntfy"
+ntfy_host_port: 8070
+ntfy_host_bind: "0.0.0.0"
+ntfy_internal_port: 80
+
+# Set this to your public domain name -- required for web push to work
+ntfy_site_domain: ""
+ntfy_base_url: "https://{{ ntfy_site_domain }}"
+ntfy_upstream_base_url: "https://ntfy.sh"
+
+# Web push credentials -- generate with: ntfy webpush keys
+# Leave empty to disable web push
+ntfy_webpush_public_key: ""
+ntfy_webpush_private_key: ""
+ntfy_webpush_file: "{{ ntfy_data_root }}/cache/webpush.db"
+# Set to an email address for web push contact (required when web push is enabled)
+ntfy_webpush_email: ""
+
+ntfy_cache_file: "{{ ntfy_data_root }}/cache/cache.db"
+ntfy_auth_file: "{{ ntfy_data_root }}/lib/auth.db"
+ntfy_attachment_cache_dir: "{{ ntfy_data_root }}/cache/attachments"
+
+# Optional external Docker networks to attach the ntfy container to.
+# Enable only if you have other containers that need to reach ntfy by container name.
+ntfy_enable_extra_networks: false
+ntfy_extra_networks: []
