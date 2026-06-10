@@ -1,4 +1,22 @@
 ---
+- name: Assert ntfy_site_domain is configured
+  ansible.builtin.assert:
+    that:
+      - ntfy_site_domain | length > 0
+    fail_msg: >-
+      ntfy_site_domain must be set to your public domain name (e.g. ntfy.example.com).
+      ntfy refuses to start without a valid base-url.
+  tags: [ntfy]
+
+- name: Assert ntfy_webpush_email is set when web push is enabled
+  ansible.builtin.assert:
+    that:
+      - ntfy_webpush_email | length > 0
+    fail_msg: >-
+      ntfy_webpush_email must be set to a valid email address when web push keys are configured.
+  when: ntfy_webpush_public_key | length > 0 and ntfy_webpush_private_key | length > 0
+  tags: [ntfy]
+
 - name: Create ntfy data directories
   ansible.builtin.file:
     path: "{{ item }}"

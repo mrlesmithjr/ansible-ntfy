@@ -24,6 +24,13 @@ ntfy_cache_file: "{{ ntfy_data_root }}/cache/cache.db"
 ntfy_auth_file: "{{ ntfy_data_root }}/lib/auth.db"
 ntfy_attachment_cache_dir: "{{ ntfy_data_root }}/cache/attachments"
 
+# Container-internal paths for ntfy config -- these must match the volume mounts in docker-compose.yml.j2
+# ./cache -> /var/cache/ntfy, ./lib -> /var/lib/ntfy
+ntfy_container_cache_file: "/var/cache/ntfy/cache.db"
+ntfy_container_auth_file: "/var/lib/ntfy/auth.db"
+ntfy_container_attachment_cache_dir: "/var/cache/ntfy/attachments"
+ntfy_container_webpush_file: "/var/cache/ntfy/webpush.db"
+
 # Optional external Docker networks to attach the ntfy container to.
 # Enable only if you have other containers that need to reach ntfy by container name.
 ntfy_enable_extra_networks: false

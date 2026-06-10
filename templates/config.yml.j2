@@ -1,11 +1,13 @@
+{% if ntfy_site_domain | length > 0 %}
 base-url: "{{ ntfy_base_url }}"
+{% endif %}
 upstream-base-url: "{{ ntfy_upstream_base_url }}"
-cache-file: "{{ ntfy_cache_file }}"
-auth-file: "{{ ntfy_auth_file }}"
-attachment-cache-dir: "{{ ntfy_attachment_cache_dir }}"
-{% if ntfy_webpush_public_key | length > 0 and ntfy_webpush_private_key | length > 0 %}
+cache-file: "{{ ntfy_container_cache_file }}"
+auth-file: "{{ ntfy_container_auth_file }}"
+attachment-cache-dir: "{{ ntfy_container_attachment_cache_dir }}"
+{% if ntfy_webpush_public_key | length > 0 and ntfy_webpush_private_key | length > 0 and ntfy_webpush_email | length > 0 %}
 web-push-public-key: "{{ ntfy_webpush_public_key }}"
 web-push-private-key: "{{ ntfy_webpush_private_key }}"
-web-push-file: "{{ ntfy_webpush_file }}"
+web-push-file: "{{ ntfy_container_webpush_file }}"
 web-push-email-address: "{{ ntfy_webpush_email }}"
 {% endif %}

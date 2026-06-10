@@ -3,6 +3,6 @@
   community.docker.docker_compose_v2:
     project_src: "{{ ntfy_data_root }}"
     state: present
-    recreate: always
+    recreate: policy
   become: true
   tags: [ntfy]
